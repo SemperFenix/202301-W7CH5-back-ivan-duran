@@ -10,7 +10,7 @@
     "build": "tsc -w",
     "build:prod": "tsc",
     "test": "jest --watchAll --coverage",
-    "test:prod": "jest --watchAll --coverage --watchAll=false --passWithNoTest"
+    "test:prod": "jest --watchAll --coverage --watchAll=false --passWithNoTests"
   },
   "keywords": [
     "backend",
