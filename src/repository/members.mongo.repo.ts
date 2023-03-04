@@ -86,7 +86,7 @@ export class MemberMongoRepo implements Repo<Member> {
   }
 
   async update(entity: Partial<Member>): Promise<Member> {
-    const updatedMember = await MemberModel.findByIdAndUpdate(entity);
+    const updatedMember = await MemberModel.findByIdAndUpdate(entity).exec();
     if (!updatedMember)
       throw new HTTPError(
         404,
@@ -99,7 +99,7 @@ export class MemberMongoRepo implements Repo<Member> {
   }
 
   async erase(id: string): Promise<void> {
-    const erasedMember = await MemberModel.findByIdAndDelete(id);
+    const erasedMember = await MemberModel.findByIdAndDelete(id).exec();
     if (!erasedMember)
       throw new HTTPError(
         404,
