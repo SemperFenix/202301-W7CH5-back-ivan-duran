@@ -17,12 +17,12 @@ const corsOrigins = {
 };
 app.use(cors(corsOrigins));
 app.use(express.json());
-app.use('/favicon', express.static('../public/favicon.png'));
 
 app.use('/', (_req, resp) => {
-  resp.send(
-    `<h1>ISDI Thirti</h1>
-    <h2>Proto-proyecto de red social</h2>
-    <p>Bienvenido a este challenge de fin de semana, muestra aprecio a tus amigos y deja clara la situación a tus enemigos.</p>`
-  );
+  resp.json({
+    info: 'Social Network Project',
+    endpoints: {
+      users: '/users',
+    },
+  });
 });
