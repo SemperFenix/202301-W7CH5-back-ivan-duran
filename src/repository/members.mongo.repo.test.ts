@@ -14,6 +14,10 @@ const mockPopulateExec = () => ({
   })),
 });
 
+const mockExec = () => ({
+  exec: jest.fn().mockResolvedValue(popValue),
+});
+
 describe('Given the MembersRepo', () => {
   describe('When call the Query method', () => {
     test('Then it should return the members array', async () => {
@@ -104,9 +108,10 @@ describe('Given the MembersRepo', () => {
   describe('When call the update method', () => {
     describe('When the user exists', () => {
       test('Then it should return the user updated', async () => {
-        (MemberModel.findByIdAndUpdate as jest.Mock).mockResolvedValue({
-          name: 'Pedro',
-        });
+        popValue = { name: 'Pedro' };
+        (MemberModel.findByIdAndUpdate as jest.Mock).mockImplementation(
+          mockExec
+        );
         const result = await repo.update({ name: 'Pedro' });
         expect(result).toEqual({ name: 'Pedro' });
       });
@@ -114,8 +119,9 @@ describe('Given the MembersRepo', () => {
 
     describe('When the id not returns a user', () => {
       test('Then it should throw error', async () => {
-        (MemberModel.findByIdAndUpdate as jest.Mock).mockResolvedValue(
-          undefined
+        popValue = undefined;
+        (MemberModel.findByIdAndUpdate as jest.Mock).mockImplementation(
+          mockExec
         );
         const result = repo.update({ name: 'Pedro' });
         await expect(result).rejects.toThrow();
@@ -126,7 +132,10 @@ describe('Given the MembersRepo', () => {
   describe('When call the erase method', () => {
     describe('When the user exists', () => {
       test('Then it should delete the user', async () => {
-        (MemberModel.findByIdAndDelete as jest.Mock).mockResolvedValue({});
+        popValue = {};
+        (MemberModel.findByIdAndDelete as jest.Mock).mockImplementation(
+          mockExec
+        );
         await repo.erase('2');
         expect(MemberModel.findByIdAndDelete).toHaveBeenCalled();
       });
@@ -134,8 +143,9 @@ describe('Given the MembersRepo', () => {
 
     describe('When the id not returns a user', () => {
       test('Then it should throw error', async () => {
-        (MemberModel.findByIdAndDelete as jest.Mock).mockResolvedValue(
-          undefined
+        popValue = undefined;
+        (MemberModel.findByIdAndDelete as jest.Mock).mockImplementation(
+          mockExec
         );
         const result = repo.erase('2');
         await expect(result).rejects.toThrow();
