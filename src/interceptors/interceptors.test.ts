@@ -19,7 +19,7 @@ jest.mock('../config.js', () => ({
 
 describe('Given the interceptors class', () => {
   afterEach(() => {
-    jest.resetAllMocks();
+    jest.clearAllMocks();
   });
 
   describe('When call the logged method', () => {
@@ -48,6 +48,45 @@ describe('Given the interceptors class', () => {
         (mockReq.get as jest.Mock).mockReturnValue('Test token');
 
         Interceptors.logged(mockReq, mockResp, next);
+        expect(next).toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe('When call the authorized method', () => {
+    describe('When called with correct parameters', () => {
+      test('Then it should call next function', () => {
+        mockReq.body = { id: '1' };
+        mockReq.member = { id: '1' } as unknown as TokenPayload;
+        Interceptors.authorized(mockReq, mockResp, next);
+        expect(next).toHaveBeenCalled();
+      });
+    });
+
+    describe('When called with no req body id', () => {
+      test('Then it should take req params id and call next if matches', () => {
+        mockReq.body = { name: 'Test' };
+        mockReq.params = { id: '1' };
+        mockReq.member = { id: '1' } as unknown as TokenPayload;
+        Interceptors.authorized(mockReq, mockResp, next);
+        expect(next).toHaveBeenCalled();
+      });
+    });
+
+    describe('When called with no matching ids', () => {
+      test('Then it should call next (error)', () => {
+        mockReq.body = { id: '2' };
+        mockReq.member = { id: '1' } as unknown as TokenPayload;
+        Interceptors.authorized(mockReq, mockResp, next);
+        expect(next).toHaveBeenCalled();
+      });
+    });
+
+    describe('When called with no req.member', () => {
+      test('Then it should call next function (error)', () => {
+        delete mockReq.member;
+
+        Interceptors.authorized(mockReq, mockResp, next);
         expect(next).toHaveBeenCalled();
       });
     });

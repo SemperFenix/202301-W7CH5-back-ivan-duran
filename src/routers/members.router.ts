@@ -34,11 +34,13 @@ membersRouter.patch(
 membersRouter.patch(
   '/edit_profile',
   Interceptors.logged,
+  Interceptors.authorized,
   controller.editProfile.bind(controller)
 );
 
 membersRouter.patch(
   '/delete_member',
   Interceptors.logged,
+  Interceptors.authorized,
   controller.deleteMember.bind(controller)
 );

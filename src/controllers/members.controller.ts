@@ -5,6 +5,7 @@ import { HTTPError } from '../errors/http.error.js';
 import { CustomRequest } from '../interceptors/interceptors.js';
 import { Repo } from '../repository/repo.interface.js';
 import { Auth, TokenPayload } from '../services/auth.js';
+import fs from 'fs/promises';
 
 const debug = createDebug('W7B:MembersController');
 
@@ -77,18 +78,21 @@ export class MembersController {
         throw new HTTPError(404, 'User not found', 'User not found');
 
       // Traer el miembro logeado con su id
-      const loggedUser = await this.repo.queryById(req.member?.id);
+      const loggedMember = await this.repo.queryById(req.member?.id);
       // Traer al miembro a añadir con su id
-      const userToAdd = await this.repo.queryById(req.body.id);
+      const memberToAdd = await this.repo.queryById(req.body.id);
       // Añadir a la propiedad friends de cada miembro al otro
-      loggedUser.friends.push(userToAdd);
-      userToAdd.friends.push(loggedUser);
+      loggedMember.friends.push(memberToAdd);
+      memberToAdd.friends.push(loggedMember);
       // Update del miembro loggeado y del miembro a añadir
-      const memberUpdated = await this.repo.update(loggedUser);
+      const memberUpdated = await this.repo.update(loggedMember);
       // Devolver el usuario loggeado actualizado
-      await this.repo.update(userToAdd);
+      await this.repo.update(memberToAdd);
       debug('Friendship upgraded! =D');
-
+      fs.appendFile(
+        './src/log/app_log.txt',
+        `\n${loggedMember.name} ${loggedMember.lastName} and ${memberToAdd.name} ${memberToAdd.lastName} are now friends\n`
+      );
       res.json({ results: [memberUpdated] });
     } catch (error) {
       next(error);
@@ -109,7 +113,10 @@ export class MembersController {
       const memberUpdated = await this.repo.update(loggedMember);
       this.repo.update(memberToAdd);
       debug('New enemy to face');
-
+      fs.appendFile(
+        './src/log/app_log.txt',
+        `\n${loggedMember.name} ${loggedMember.lastName} and ${memberToAdd.name} ${memberToAdd.lastName} are now enemies\n`
+      );
       res.json({ results: [memberUpdated] });
     } catch (error) {
       next(error);
@@ -122,10 +129,9 @@ export class MembersController {
 
       if (!req.member?.id || !req.body.id)
         throw new HTTPError(404, 'User not found', 'User not found');
-      const loggedMemberId = req.member?.id;
-      const memberToAddId = req.body.id;
-      const loggedMember = await this.repo.queryById(loggedMemberId);
-      const memberToRemove = await this.repo.queryById(memberToAddId);
+
+      const loggedMember = await this.repo.queryById(req.member?.id);
+      const memberToRemove = await this.repo.queryById(req.body.id);
       loggedMember.friends = loggedMember.friends.filter(
         (item) => item.id !== memberToRemove.id
       );
@@ -135,6 +141,10 @@ export class MembersController {
       const memberUpdated = await this.repo.update(loggedMember);
       this.repo.update(memberToRemove);
       debug('Friend removed =(');
+      fs.appendFile(
+        './src/log/app_log.txt',
+        `\n${loggedMember.name} ${loggedMember.lastName} and ${memberToRemove.name} ${memberToRemove.lastName} are no longer friends\n`
+      );
       res.json({ results: [memberUpdated] });
     } catch (error) {
       next(error);
@@ -150,17 +160,20 @@ export class MembersController {
       const loggedMemberId = req.member?.id;
       const memberToAddId = req.body.id;
       const loggedMember = await this.repo.queryById(loggedMemberId);
-      const userToRemove = await this.repo.queryById(memberToAddId);
+      const memberToRemove = await this.repo.queryById(memberToAddId);
       loggedMember.enemies = loggedMember.enemies.filter(
-        (item) => item.id !== userToRemove.id
+        (item) => item.id !== memberToRemove.id
       );
-      userToRemove.enemies = userToRemove.enemies.filter(
+      memberToRemove.enemies = memberToRemove.enemies.filter(
         (item) => item.id !== loggedMember.id
       );
       const updatedMember = await this.repo.update(loggedMember);
-      this.repo.update(userToRemove);
+      this.repo.update(memberToRemove);
       debug('One less enemy, good job!');
-
+      fs.appendFile(
+        './src/log/app_log.txt',
+        `\n${loggedMember.name} ${loggedMember.lastName} and ${memberToRemove.name} ${memberToRemove.lastName} are no longer enemies\n`
+      );
       res.json({ results: [updatedMember] });
     } catch (error) {
       next(error);
