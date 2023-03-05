@@ -10,12 +10,10 @@ export interface CustomRequest extends Request {
 }
 
 export abstract class Interceptors {
-  constructor() {
-    debug('Instantiated... never happened');
-  }
-
   static logged(req: CustomRequest, res: Response, next: NextFunction) {
     try {
+      debug('Logging...');
+
       const authHeader = req.get('Authorization');
       if (!authHeader)
         throw new HTTPError(
@@ -40,5 +38,6 @@ export abstract class Interceptors {
     }
   }
 
-  static authorized() {}
+  // Comentada para futura implementación
+  // static authorized() {}
 }
