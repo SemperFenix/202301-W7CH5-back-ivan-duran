@@ -15,13 +15,13 @@ La red social consumirá los datos de una API desarrollada con Express, conectad
 
 ## Tareas
 
-- [ ] Permitir registro de usuarios
-- [ ] Permitir login de usuarios
-- [ ] Permitir lectura de listado de usuarios
-- [ ] Permitir creación de relación de amistad entre usuarios
-- [ ] Permitir creación de relación de enemistad entre usuarios
+- [x] Permitir registro de usuarios
+- [x] Permitir login de usuarios
+- [x] Permitir lectura de listado de usuarios
+- [x] Permitir creación de relación de amistad entre usuarios
+- [x] Permitir creación de relación de enemistad entre usuarios
 
-- [ ] Creación de log de relaciones
+- [x] Creación de log de relaciones
 
 ## Dudas
 
