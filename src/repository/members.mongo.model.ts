@@ -1,5 +1,5 @@
 import { model, Schema } from 'mongoose';
-import { Member } from '../entities/member';
+import { Member } from '../entities/member.js';
 
 const memberSchema = new Schema<Member>({
   email: {

@@ -10,7 +10,9 @@ let popValue: unknown;
 // Asignando una variable al mockResolvedValue puedo llevar a cabo distintos tests usando el mismo mock
 const mockPopulateExec = () => ({
   populate: jest.fn().mockImplementation(() => ({
-    exec: jest.fn().mockResolvedValue(popValue),
+    populate: jest.fn().mockImplementation(() => ({
+      exec: jest.fn().mockResolvedValue(popValue),
+    })),
   })),
 });
 

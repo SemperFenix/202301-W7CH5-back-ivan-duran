@@ -1,8 +1,8 @@
-import { Member } from '../entities/member';
-import { Repo } from './repo.interface';
+import { Member } from '../entities/member.js';
+import { Repo } from './repo.interface.js';
 import createDebugger from 'debug';
-import { MemberModel } from './members.mongo.model';
-import { HTTPError } from '../errors/http.error';
+import { MemberModel } from './members.mongo.model.js';
+import { HTTPError } from '../errors/http.error.js';
 
 const debug = createDebugger('W7B:MemberRepo');
 
@@ -21,7 +21,8 @@ export class MemberMongoRepo implements Repo<Member> {
 
   async query(): Promise<Member[]> {
     const members = await MemberModel.find()
-      .populate('friends', { friends: 0, enemies: 0 }, 'enemies', {
+      .populate('friends', { friends: 0, enemies: 0 })
+      .populate('enemies', {
         friends: 0,
         enemies: 0,
       })
@@ -32,7 +33,8 @@ export class MemberMongoRepo implements Repo<Member> {
 
   async advancedQuery(): Promise<Member[]> {
     const members = await MemberModel.find()
-      .populate('friends', 'enemies')
+      .populate('friends')
+      .populate('enemies')
       .exec();
     debug('There you have them complete! =)');
 
@@ -41,7 +43,8 @@ export class MemberMongoRepo implements Repo<Member> {
 
   async queryById(id: string): Promise<Member> {
     const member = await MemberModel.findById(id)
-      .populate('friends', { friends: 0, enemies: 0 }, 'enemies', {
+      .populate('friends', { friends: 0, enemies: 0 })
+      .populate('enemies', {
         friends: 0,
         enemies: 0,
       })
@@ -55,7 +58,8 @@ export class MemberMongoRepo implements Repo<Member> {
 
   async advancedQueryById(id: string): Promise<Member> {
     const member = await MemberModel.findById(id)
-      .populate('friends', 'enemies')
+      .populate('friends')
+      .populate('enemies')
       .exec();
     if (!member)
       throw new HTTPError(404, 'Not found', 'User Id not found in DB');
@@ -68,7 +72,8 @@ export class MemberMongoRepo implements Repo<Member> {
     const protoQuery = query.map((item) => ({ [item.key]: item.value }));
     const myQuery = protoQuery.reduce((obj, item) => ({ ...obj, ...item }));
     const members = await MemberModel.find({ ...myQuery })
-      .populate('friends', { friends: 0, enemies: 0 }, 'enemies', {
+      .populate('friends', { friends: 0, enemies: 0 })
+      .populate('enemies', {
         friends: 0,
         enemies: 0,
       })
@@ -86,7 +91,11 @@ export class MemberMongoRepo implements Repo<Member> {
   }
 
   async update(entity: Partial<Member>): Promise<Member> {
-    const updatedMember = await MemberModel.findByIdAndUpdate(entity).exec();
+    const updatedMember = await MemberModel.findByIdAndUpdate(
+      entity.id,
+      entity,
+      { new: true }
+    ).exec();
     if (!updatedMember)
       throw new HTTPError(
         404,
