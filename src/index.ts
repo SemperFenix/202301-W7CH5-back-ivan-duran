@@ -2,8 +2,16 @@ import http from 'http';
 import { app } from './app.js';
 import createDebug from 'debug';
 import { dbConnect } from './db/db.connect.js';
+import fs from 'fs/promises';
 
 const debug = createDebug('W7B:index');
+fs.appendFile(
+  './src/log/app_log.txt',
+  `**New App session:**\n${new Date()}\n`,
+  {
+    encoding: 'utf-8',
+  }
+);
 
 const PORT = process.env.PORT || 4742;
 
