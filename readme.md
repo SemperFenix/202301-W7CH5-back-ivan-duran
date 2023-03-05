@@ -24,3 +24,5 @@ La red social consumirá los datos de una API desarrollada con Express, conectad
 - [ ] Creación de log de relaciones
 
 ## Dudas
+
+- Cómo utilizar jest.spyOn para comprobar que debug ha sido llamado.
