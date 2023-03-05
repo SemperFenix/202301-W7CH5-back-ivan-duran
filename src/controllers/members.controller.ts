@@ -54,6 +54,8 @@ export class MembersController {
       const member = await this.repo.search([{ key: 'email', value: email }]);
       if (!member.length)
         throw new HTTPError(401, 'Unauthorized', 'Invalid email or password');
+      if (!(await Auth.compareHash(password, member[0].password)))
+        throw new HTTPError(401, 'Unauthorized', 'Password not match');
       const tokenPayload: TokenPayload = {
         id: member[0].id,
         email: member[0].email,
@@ -71,17 +73,13 @@ export class MembersController {
   async addFriend(req: CustomRequest, res: Response, next: NextFunction) {
     try {
       debug('Adding friend...');
-
-      // Coger la id del miembro loggeado
       if (!req.member?.id || !req.body.id)
         throw new HTTPError(404, 'User not found', 'User not found');
-      const loggedUserId = req.member?.id;
-      // Coger del body el id del miembro a añadir
-      const userToAddId = req.body.id;
+
       // Traer el miembro logeado con su id
-      const loggedUser = await this.repo.queryById(loggedUserId);
+      const loggedUser = await this.repo.queryById(req.member?.id);
       // Traer al miembro a añadir con su id
-      const userToAdd = await this.repo.queryById(userToAddId);
+      const userToAdd = await this.repo.queryById(req.body.id);
       // Añadir a la propiedad friends de cada miembro al otro
       loggedUser.friends.push(userToAdd);
       userToAdd.friends.push(loggedUser);
@@ -103,10 +101,9 @@ export class MembersController {
 
       if (!req.member?.id || !req.body.id)
         throw new HTTPError(404, 'User not found', 'User not found');
-      const loggedMemberId = req.member?.id;
-      const memberToAddId = req.body.id;
-      const loggedMember = await this.repo.queryById(loggedMemberId);
-      const memberToAdd = await this.repo.queryById(memberToAddId);
+
+      const loggedMember = await this.repo.queryById(req.member?.id);
+      const memberToAdd = await this.repo.queryById(req.body.id);
       loggedMember.enemies.push(memberToAdd);
       memberToAdd.enemies.push(loggedMember);
       const memberUpdated = await this.repo.update(loggedMember);
