@@ -17,36 +17,39 @@ jest.mock('../config.js', () => ({
   },
 }));
 
-describe('Given the logged middleware function', () => {
+describe('Given the interceptors class', () => {
   afterEach(() => {
     jest.resetAllMocks();
   });
-  describe('When called with correct parameters', () => {
-    test('Then it should call next function', () => {
-      (mockReq.get as jest.Mock).mockReturnValue('Bearer test');
-      (Auth.getTokenInfo as jest.Mock).mockResolvedValue({
-        id: 'Test',
-      } as TokenPayload);
-      Interceptors.logged(mockReq, mockResp, next);
-      expect(next).toHaveBeenCalled();
+
+  describe('When call the logged method', () => {
+    describe('When called with correct parameters', () => {
+      test('Then it should call next function', () => {
+        (mockReq.get as jest.Mock).mockReturnValue('Bearer test');
+        (Auth.getTokenInfo as jest.Mock).mockResolvedValue({
+          id: 'Test',
+        } as TokenPayload);
+        Interceptors.logged(mockReq, mockResp, next);
+        expect(next).toHaveBeenCalled();
+      });
     });
-  });
 
-  describe('When called with no Authorization header', () => {
-    test('Then it should call next function (error)', () => {
-      (mockReq.get as jest.Mock).mockReturnValue(undefined);
+    describe('When called with no Authorization header', () => {
+      test('Then it should call next function (error)', () => {
+        (mockReq.get as jest.Mock).mockReturnValue(undefined);
 
-      Interceptors.logged(mockReq, mockResp, next);
-      expect(next).toHaveBeenCalled();
+        Interceptors.logged(mockReq, mockResp, next);
+        expect(next).toHaveBeenCalled();
+      });
     });
-  });
 
-  describe('When Authorization header not start with "Bearer"', () => {
-    test('Then it should call next function (error)', () => {
-      (mockReq.get as jest.Mock).mockReturnValue('Test token');
+    describe('When Authorization header not start with "Bearer"', () => {
+      test('Then it should call next function (error)', () => {
+        (mockReq.get as jest.Mock).mockReturnValue('Test token');
 
-      Interceptors.logged(mockReq, mockResp, next);
-      expect(next).toHaveBeenCalled();
+        Interceptors.logged(mockReq, mockResp, next);
+        expect(next).toHaveBeenCalled();
+      });
     });
   });
 });
