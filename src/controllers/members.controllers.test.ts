@@ -68,7 +68,7 @@ describe('Given the MembersController class', () => {
     describe('When no email in req body', () => {
       test('Then it should call next', async () => {
         mockReq.body = {
-          password: '123',
+          password: cont,
         };
         await controller.register(mockReq, mockResp, mockNext);
         expect(mockNext).toHaveBeenCalled();
@@ -149,18 +149,13 @@ describe('Given the MembersController class', () => {
   describe('When call the addFriend method', () => {
     describe('When all params are correct', () => {
       test('Then it should call res.json', async () => {
-        (mockRepo.queryById as jest.Mock).mockResolvedValueOnce({
-          friends: ['test'],
-        });
-        (mockRepo.queryById as jest.Mock).mockResolvedValueOnce({
+        (mockRepo.queryById as jest.Mock).mockResolvedValue({
           friends: ['test2'],
         });
-        (mockRepo.update as jest.Mock).mockResolvedValueOnce({
+        (mockRepo.update as jest.Mock).mockResolvedValue({
           friends: 'test2',
         });
-        (mockRepo.update as jest.Mock).mockResolvedValueOnce({
-          friends: 'test2',
-        });
+
         await controller.addFriend(mockReq, mockResp, mockNext);
         expect(mockResp.json).toHaveBeenCalled();
       });
@@ -249,16 +244,11 @@ describe('Given the MembersController class', () => {
   describe('When call the removeFriend method', () => {
     describe('When all params are correct', () => {
       test('Then it should call res.json', async () => {
-        (mockRepo.queryById as jest.Mock).mockResolvedValueOnce({
-          friends: ['test'],
+        (mockRepo.queryById as jest.Mock).mockResolvedValue({
+          friends: [{ id: 'test' }, { id: 'test3' }],
         });
-        (mockRepo.queryById as jest.Mock).mockResolvedValueOnce({
-          friends: ['test2'],
-        });
-        (mockRepo.update as jest.Mock).mockResolvedValueOnce({
-          friends: 'test2',
-        });
-        (mockRepo.update as jest.Mock).mockResolvedValueOnce({
+
+        (mockRepo.update as jest.Mock).mockResolvedValue({
           friends: 'test2',
         });
         await controller.removeFriend(mockReq, mockResp, mockNext);
