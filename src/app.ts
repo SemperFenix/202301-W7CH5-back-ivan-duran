@@ -21,12 +21,13 @@ app.use(cors(corsOrigins));
 app.use(express.json());
 
 app.use('/members', membersRouter);
-
+app.use('/log', (_req, resp) => resp.download('./src/log/app_log.txt'));
 app.use('/', (_req, resp) => {
   resp.json({
     info: 'Social Network Project',
     endpoints: {
       members: '/members',
+      log: '/log',
     },
   });
 });
