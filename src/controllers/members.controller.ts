@@ -1,10 +1,10 @@
 import createDebug from 'debug';
 import { NextFunction, Request, Response } from 'express';
-import { Member } from '../entities/member';
-import { HTTPError } from '../errors/http.error';
-import { CustomRequest } from '../interceptors/interceptors';
-import { Repo } from '../repository/repo.interface';
-import { Auth, TokenPayload } from '../services/auth';
+import { Member } from '../entities/member.js';
+import { HTTPError } from '../errors/http.error.js';
+import { CustomRequest } from '../interceptors/interceptors.js';
+import { Repo } from '../repository/repo.interface.js';
+import { Auth, TokenPayload } from '../services/auth.js';
 
 const debug = createDebug('W7B:MembersController');
 
@@ -14,6 +14,19 @@ export class MembersController {
     debug('Members controller instantiated...');
   }
 
+  async getAll(req: Request, res: Response, next: NextFunction) {
+    try {
+      const members = await this.repo.query();
+      res.json({ results: members });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // Añadir búsqueda de un miembro por id
+  // Añadir búsqueda con search
+  // Añadir mostrar amigos y mostrar enemigos => Creo que esto es más del front, ya que los amigos ya están dentro de sus propiedades
+
   async register(req: Request, res: Response, next: NextFunction) {
     try {
       debug('Registering...');
@@ -21,7 +34,7 @@ export class MembersController {
       if (!req.body.email || !req.body.password)
         throw new HTTPError(401, 'Unathorized', 'No email or pass provided');
       req.body.password = await Auth.hash(req.body.password);
-      const newMember = this.repo.create(req.body);
+      const newMember = await this.repo.create(req.body);
       req.body.friends = [];
       req.body.enemies = [];
       res.status(201);
@@ -70,12 +83,12 @@ export class MembersController {
       // Traer al miembro a añadir con su id
       const userToAdd = await this.repo.queryById(userToAddId);
       // Añadir a la propiedad friends de cada miembro al otro
-      loggedUser.friends = [...loggedUser.friends, userToAdd];
-      userToAdd.friends = [...userToAdd.friends, loggedUser];
+      loggedUser.friends.push(userToAdd);
+      userToAdd.friends.push(loggedUser);
       // Update del miembro loggeado y del miembro a añadir
       const memberUpdated = await this.repo.update(loggedUser);
       // Devolver el usuario loggeado actualizado
-      this.repo.update(userToAdd);
+      await this.repo.update(userToAdd);
       debug('Friendship upgraded! =D');
 
       res.json({ results: [memberUpdated] });
@@ -94,8 +107,8 @@ export class MembersController {
       const memberToAddId = req.body.id;
       const loggedMember = await this.repo.queryById(loggedMemberId);
       const memberToAdd = await this.repo.queryById(memberToAddId);
-      loggedMember.enemies = [...loggedMember.enemies, memberToAdd];
-      memberToAdd.enemies = [...memberToAdd.enemies, loggedMember];
+      loggedMember.enemies.push(memberToAdd);
+      memberToAdd.enemies.push(loggedMember);
       const memberUpdated = await this.repo.update(loggedMember);
       this.repo.update(memberToAdd);
       debug('New enemy to face');
