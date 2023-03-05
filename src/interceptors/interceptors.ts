@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
-import { Auth, TokenPayload } from '../services/auth';
+import { Auth, TokenPayload } from '../services/auth.js';
 import createDebugger from 'debug';
-import { HTTPError } from '../errors/http.error';
+import { HTTPError } from '../errors/http.error.js';
 
 const debug = createDebugger('W7B:Interceptors');
 
