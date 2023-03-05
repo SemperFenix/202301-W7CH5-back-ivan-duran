@@ -38,6 +38,23 @@ export abstract class Interceptors {
     }
   }
 
-  // Comentada para futura implementación
-  // static authorized() {}
+  static async authorized(
+    req: CustomRequest,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      if (!req.member)
+        throw new HTTPError(498, 'Token not found', 'No member in the request');
+
+      if (!req.body.id) req.body.id = req.params.id;
+
+      if (req.member.id !== req.body.id)
+        throw new HTTPError(401, 'Unauthorized', 'Not allowed action');
+      debug('Authorized!');
+      next();
+    } catch (error) {
+      next(error);
+    }
+  }
 }
