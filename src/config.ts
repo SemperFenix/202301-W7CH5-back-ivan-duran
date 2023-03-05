@@ -9,7 +9,7 @@ export const config = {
   password: process.env.DB_PASSWORD,
   cluster: process.env.DB_CLUSTER,
   collection: process.env.DB_NAME,
-  secret: process.env.SECRET,
+  secret: process.env.DB_SECRET,
 };
 
 export const _dirname = path.dirname(fileURLToPath(import.meta.url));
