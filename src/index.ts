@@ -5,9 +5,9 @@ import { dbConnect } from './db/db.connect.js';
 import fs from 'fs/promises';
 
 const debug = createDebug('W7B:index');
-fs.appendFile(
+fs.writeFile(
   './src/log/app_log.txt',
-  `**New App session:**\n${new Date()}\n`,
+  `**New Server session:**\n${new Date()}\n`,
   {
     encoding: 'utf-8',
   }
