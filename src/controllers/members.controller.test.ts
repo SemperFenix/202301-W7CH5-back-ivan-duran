@@ -5,6 +5,9 @@ import { Repo } from '../repository/repo.interface.js';
 import { Auth, TokenPayload } from '../services/auth';
 import { MembersController } from './members.controller.js';
 
+jest.mock('fs/promises', () => ({
+  appendFile: jest.fn().mockResolvedValue('ok'),
+}));
 jest.mock('../config.js', () => ({
   _dirname: 'test',
   config: {
