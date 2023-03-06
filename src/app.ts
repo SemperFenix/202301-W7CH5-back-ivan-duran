@@ -5,6 +5,7 @@ import morgan from 'morgan';
 import cors from 'cors';
 import { membersRouter } from './routers/members.router.js';
 import { CustomError } from './errors/http.error.js';
+import path from 'path';
 
 const debug = createDebug('W7B:app');
 
@@ -12,7 +13,7 @@ export const app = express();
 app.disable('x-powered-by');
 debug(_dirname);
 app.use(morgan('dev'));
-app.use(express.static('public'));
+app.use(express.static(path.resolve(_dirname, 'public')));
 
 const corsOrigins = {
   origin: '*',

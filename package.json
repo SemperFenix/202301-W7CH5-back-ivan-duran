@@ -8,7 +8,9 @@
     "start": "cross-env DEBUG=W7B* PORT=4500 node ./dist/index.js",
     "start:mon": "cross-env DEBUG=W7B* PORT=4500 nodemon ./dist/index.js",
     "build": "tsc -w",
+    "prebuild": "npm run copy:public",
     "build:prod": "tsc",
+    "copy:public": "copyfiles -u 1 src/public/**/*.* dist",
     "test": "jest --watchAll --coverage",
     "test:prod": "jest --watchAll --coverage --watchAll=false --passWithNoTests"
   },
@@ -26,10 +28,10 @@
     "@types/debug": "^4.1.7",
     "@types/express": "^4.17.17",
     "@types/jest": "^29.4.0",
+    "@types/jsonwebtoken": "^9.0.1",
     "@types/mongoose": "^5.11.97",
     "@types/morgan": "^1.9.4",
     "@types/node": "^18.14.0",
-    "@types/jsonwebtoken": "^9.0.1",
     "@typescript-eslint/eslint-plugin": "^5.53.0",
     "@typescript-eslint/parser": "^5.53.0",
     "bcryptjs": "^2.4.3",
@@ -55,5 +57,8 @@
   },
   "prettier": {
     "singleQuote": true
+  },
+  "dependencies": {
+    "copyfiles": "^2.4.1"
   }
 }
