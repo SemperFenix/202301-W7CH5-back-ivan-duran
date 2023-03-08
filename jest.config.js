@@ -13,5 +13,6 @@ export default {
     'config.ts',
     'mocks',
     'src/repository/*.*.model.*',
+    'helpers',
   ],
 };

@@ -3,7 +3,10 @@ import { config } from '../config.js';
 
 const { user, password, cluster, collection } = config;
 
-export const dbConnect = () => {
-  const uri = `mongodb+srv://${user}:${password}@${cluster}/${collection}?retryWrites=true&w=majority`;
+export const dbConnect = (env?: string) => {
+  const finalEnv = env || process.env.NODE_ENV;
+  const finalDBName =
+    finalEnv === 'test' ? collection + '_Testing' : collection;
+  const uri = `mongodb+srv://${user}:${password}@${cluster}/${finalDBName}?retryWrites=true&w=majority`;
   return mongoose.connect(uri);
 };

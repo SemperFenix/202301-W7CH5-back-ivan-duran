@@ -23,7 +23,7 @@ describe('Given the interceptors class', () => {
   });
 
   describe('When call the logged method', () => {
-    describe('When called with correct parameters', () => {
+    describe('And called with correct parameters', () => {
       test('Then it should call next function', () => {
         (mockReq.get as jest.Mock).mockReturnValue('Bearer test');
         (Auth.getTokenInfo as jest.Mock).mockResolvedValue({
@@ -34,7 +34,7 @@ describe('Given the interceptors class', () => {
       });
     });
 
-    describe('When called with no Authorization header', () => {
+    describe('And called with no Authorization header', () => {
       test('Then it should call next function (error)', () => {
         (mockReq.get as jest.Mock).mockReturnValue(undefined);
 

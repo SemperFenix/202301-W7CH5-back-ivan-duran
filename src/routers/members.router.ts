@@ -10,6 +10,7 @@ const controller = new MembersController(repo);
 membersRouter.get('/', controller.getAll.bind(controller));
 membersRouter.post('/register', controller.register.bind(controller));
 membersRouter.post('/login', controller.login.bind(controller));
+// Mejor construir las url con /, luego nos permite hacer un join y tener las posiciones fácilmente
 membersRouter.patch(
   '/add_friend',
   Interceptors.logged,

@@ -8,4 +8,5 @@ export type Member = {
   religion?: string;
   friends: Member[];
   enemies: Member[];
+  img?: string;
 };
