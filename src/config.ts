@@ -1,6 +1,4 @@
 import dotenv from 'dotenv';
-import path from 'path';
-import { fileURLToPath } from 'url';
 
 dotenv.config();
 
@@ -11,5 +9,3 @@ export const config = {
   collection: process.env.DB_NAME,
   secret: process.env.DB_SECRET,
 };
-
-export const _dirname = path.dirname(fileURLToPath(import.meta.url));

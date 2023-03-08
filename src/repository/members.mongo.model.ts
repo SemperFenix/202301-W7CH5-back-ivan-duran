@@ -37,6 +37,9 @@ const memberSchema = new Schema<Member>({
       ref: 'Member',
     },
   ],
+  img: {
+    type: String,
+  },
 });
 
 memberSchema.set('toJSON', {
