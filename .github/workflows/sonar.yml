@@ -16,6 +16,12 @@ jobs:
       - name: Install modules
         run: npm ci
       - name: Testing in production with coverage
+        env:
+          DB_USER: ${{secrets.USER}}
+          DB_PASSWORD: ${{secrets.PASSW}}
+          DB_CLUSTER: ${{secrets.CLUSTER}}
+          DB_SECRET: ${{secrets.SECRET}}
+
         run: npm run test:prod #Ejecuta los tests que hayamos hecho desde el servidor.
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
