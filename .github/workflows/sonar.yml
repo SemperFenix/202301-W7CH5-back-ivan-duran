@@ -18,7 +18,7 @@ jobs:
       - name: Testing in production with coverage
         env:
           DB_USER: ${{secrets.DB_USER}}
-          DB_PASSWORD: ${{secrets.DB_PASSW}}
+          DB_PASSWORD: ${{secrets.DB_PASSWORD}}
           DB_CLUSTER: ${{secrets.DB_CLUSTER}}
           DB_NAME: ${{secrets.DB_NAME}}
           DB_SECRET: ${{secrets.DB_SECRET}}
