@@ -17,10 +17,11 @@ jobs:
         run: npm ci
       - name: Testing in production with coverage
         env:
-          DB_USER: ${{secrets.USER}}
-          DB_PASSWORD: ${{secrets.PASSW}}
-          DB_CLUSTER: ${{secrets.CLUSTER}}
-          DB_SECRET: ${{secrets.SECRET}}
+          DB_USER: ${{secrets.DB_USER}}
+          DB_PASSWORD: ${{secrets.DB_PASSW}}
+          DB_CLUSTER: ${{secrets.DB_CLUSTER}}
+          DB_NAME: ${{secrets.DB_NAME}}
+          DB_SECRET: ${{secrets.DB_SECRET}}
 
         run: npm run test:prod #Ejecuta los tests que hayamos hecho desde el servidor.
       - name: SonarCloud Scan
